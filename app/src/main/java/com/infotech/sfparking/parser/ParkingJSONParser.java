@@ -32,7 +32,7 @@ public class ParkingJSONParser {
 				JSONObject obj = ar.getJSONObject(i);
 				AvailableParking parking = new AvailableParking();
                 parking.setName(obj.getString("NAME"));
-                parking.setBfid(obj.getInt("BFID"));
+                //parking.setBfid(obj.getInt("BFID"));
                 location = obj.getString("LOC");
                 String[] temp = location.split(",");
                 Log.i("JSON", location);

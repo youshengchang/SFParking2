@@ -1,12 +1,14 @@
 package com.infotech.sfparking;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,10 +33,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
-
-	TextView output;
-	ProgressBar pb;
+public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+	//TextView output;
+	//ProgressBar pb;
 	List<MyTask> tasks;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 	
@@ -40,34 +44,64 @@ public class MainActivity extends FragmentActivity {
 
     ParkingDataSource datasource;
 
+    private GoogleApiClient mGoogleApiClient;
+    final float DEFAULT_ZOOM = 15;
+    LatLng mCurrentLatLng;
+    String sfParkingURI = "http://api.sfpark.org/sfpark/rest/availabilityservice?response=json";
+    float radius = 0.2f;
+    
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
-		
-//		Initialize the TextView for vertical scrolling
-		output = (TextView) findViewById(R.id.textView);
-		output.setMovementMethod(new ScrollingMovementMethod());
-		
-		pb = (ProgressBar) findViewById(R.id.progressBar1);
-		pb.setVisibility(View.INVISIBLE);
-		
+        buildGoogleApiClient();
+
+
 		tasks = new ArrayList<>();
 
         datasource = new ParkingDataSource(this);
         datasource.open();
         parkingList = datasource.findAll();
 
-//        ArrayAdapter<AvailableParking> adapter = new ArrayAdapter<AvailableParking>(this,
-//                android.R.layout.simple_list_item_1, parkingList);
-//        setListAdapter(adapter);
-
         if(!datasource.findAll().isEmpty()){
             datasource.deleteAll();
         }
-        updateDisplay(37.7919, -122.3975);
+
+//        updateDisplay(37.7919, -122.3975);
 	}
+
+    private void gotoCurrentLocation() {
+        Location currentlocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(currentlocation == null){
+            Toast.makeText(this,"current location is not available", Toast.LENGTH_LONG).show();
+        }else{
+            mCurrentLatLng = new LatLng(currentlocation.getLatitude(), currentlocation.getLongitude());
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, DEFAULT_ZOOM);
+            mMap.moveCamera(update);
+        }
+
+    }
+
+    private void gotoLocation(double lat, double lng){
+        mCurrentLatLng = new LatLng(lat,lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, DEFAULT_ZOOM);
+        mMap.moveCamera(update);
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+
+
+
+    }
 
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -78,6 +112,8 @@ public class MainActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
+
+
             }
         }
     }
@@ -92,22 +128,39 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 
+    private String getSfParkingURI(){
+
+        String sLat = Double.toString(mCurrentLatLng.latitude);
+        String sLng = Double.toString(mCurrentLatLng.longitude);
+        String sRadius = Float.toString(radius);
+
+        String uri = sfParkingURI + "&lat=" + sLat + "&long=" + sLng + "&radius=" + sRadius + "&uom=mile";
+        Log.i("SFPARK", uri);
+        return uri;
+    }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_get_data) {
 			if (isOnline()) {
 				//requestData("http://services.hanselandpetal.com/feeds/flowers.json");
-                requestData("http://api.sfpark.org/sfpark/rest/availabilityservice?response=json&lat=37.7919&long=-122.3975&radius=0.05&uom=mile");
+//                requestData("http://api.sfpark.org/sfpark/rest/availabilityservice?response=json&lat=37.7919&long=-122.3975&radius=0.05&uom=mile");
+                requestData(getSfParkingURI());
                 //updateDisplay(37.7919, -122.3975);
 			} else {
 				Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
 			}
 		}
+        if(item.getItemId() == R.id.action_current){
+            gotoCurrentLocation();
+        }
+        if(item.getItemId() == R.id.action_market){
+            gotoLocation(37.7919, -122.3975);
+        }
 		return false;
 	}
 
     private void updateDisplay(double lat, double lng) {
-        final float DEFAULT_ZOOM = 15;
+
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, DEFAULT_ZOOM);
         mMap.moveCamera(update);
@@ -121,17 +174,6 @@ public class MainActivity extends FragmentActivity {
 	protected void updateDisplay() {
 
         parkingList = datasource.findAll();
-
-//        ArrayAdapter<AvailableParking> adapter = new ArrayAdapter<AvailableParking>(this,
-//                android.R.layout.simple_list_item_1, parkingList);
-//        setListAdapter(adapter);
-
-//		if (parkingList != null) {
-//			for (AvailableParking parking: parkingList) {
-//				output.append("Parking Address: " + parking.getName() + " Latitude: " + parking.getLatitude() + " Longitude: " + parking.getLongitude() + "\n");
-//
-//			}
-//		}
         LatLng ll;
 
         	if (parkingList != null) {
@@ -151,16 +193,34 @@ public class MainActivity extends FragmentActivity {
 			return false;
 		}
 	}
-	
-	private class MyTask extends AsyncTask<String, String, String> {
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Toast.makeText(this, "The connection service is available", Toast.LENGTH_SHORT).show();
+        gotoCurrentLocation();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
+    private class MyTask extends AsyncTask<String, String, String> {
 
 		@Override
 		protected void onPreExecute() {
 //			updateDisplay("Starting task");
 			
-			if (tasks.size() == 0) {
-				pb.setVisibility(View.VISIBLE);
-			}
+//			if (tasks.size() == 0) {
+//				pb.setVisibility(View.VISIBLE);
+//			}
 			tasks.add(this);
 		}
 		
@@ -180,9 +240,9 @@ public class MainActivity extends FragmentActivity {
             updateDatabase();
             updateDisplay();
 			tasks.remove(this);
-			if (tasks.size() == 0) {
-				pb.setVisibility(View.INVISIBLE);
-			}
+//			if (tasks.size() == 0) {
+//				pb.setVisibility(View.INVISIBLE);
+//			}
 
 		}
 		
@@ -195,9 +255,10 @@ public class MainActivity extends FragmentActivity {
 	}
 
     private void updateDatabase() {
+        datasource.open();
         AvailableParking parking;
 
-        if(!parkingList.isEmpty()){
+        if((parkingList != null)&&(!parkingList.isEmpty())){
             Iterator it = parkingList.iterator();
 
             while(it.hasNext()){

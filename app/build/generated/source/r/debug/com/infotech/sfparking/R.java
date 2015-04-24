@@ -1700,12 +1700,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090033;
         public static final int action_bar_title=0x7f090032;
         public static final int action_context_bar=0x7f090046;
-        public static final int action_get_data=0x7f090056;
+        public static final int action_current=0x7f090055;
+        public static final int action_get_data=0x7f090057;
+        public static final int action_market=0x7f090056;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_bar=0x7f090042;
         public static final int action_mode_bar_stub=0x7f090041;
         public static final int action_mode_close_button=0x7f090034;
+        public static final int action_set_radius=0x7f090058;
         public static final int activity_chooser_view_content=0x7f090035;
         public static final int adjust_height=0x7f090016;
         public static final int adjust_width=0x7f090017;
@@ -1747,7 +1750,6 @@ containing a value of this type.
         public static final int none=0x7f09000e;
         public static final int normal=0x7f09000a;
         public static final int production=0x7f090025;
-        public static final int progressBar1=0x7f090055;
         public static final int progress_circular=0x7f090005;
         public static final int progress_horizontal=0x7f090006;
         public static final int radio=0x7f09003f;
@@ -1866,14 +1868,16 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f0b002d;
         public static final int create_calendar_message=0x7f0b002e;
         public static final int create_calendar_title=0x7f0b002f;
-        public static final int decline=0x7f0b0030;
-        public static final int get_data=0x7f0b0031;
-        public static final int google_maps_key=0x7f0b0037;
-        public static final int hello_world=0x7f0b0032;
-        public static final int placeholder=0x7f0b0033;
-        public static final int store_picture_message=0x7f0b0034;
-        public static final int store_picture_title=0x7f0b0035;
-        public static final int wallet_buy_button_place_holder=0x7f0b0036;
+        public static final int current_location=0x7f0b0030;
+        public static final int decline=0x7f0b0031;
+        public static final int get_data=0x7f0b0032;
+        public static final int google_maps_key=0x7f0b0039;
+        public static final int hello_world=0x7f0b0033;
+        public static final int set_radius=0x7f0b0034;
+        public static final int sf_market=0x7f0b0035;
+        public static final int store_picture_message=0x7f0b0036;
+        public static final int store_picture_title=0x7f0b0037;
+        public static final int wallet_buy_button_place_holder=0x7f0b0038;
     }
     public static final class style {
         /** 

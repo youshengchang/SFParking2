@@ -3,7 +3,8 @@
 
     <string name="app_name">San Francisco Parking</string>
     <string name="hello_world">Hello world!</string>
-    <string name="get_data">Get data</string>
-    <string name="placeholder">Placeholder</string>
-
+    <string name="get_data">Get Parking Info</string>
+    <string name="current_location">Current Location</string>
+    <string name="sf_market">SF Market Street</string>
+    <string name="set_radius">Set Radius</string>
 </resources>
