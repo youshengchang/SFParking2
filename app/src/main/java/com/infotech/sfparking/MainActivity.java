@@ -1,6 +1,8 @@
 package com.infotech.sfparking;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +33,7 @@ import com.infotech.sfparking.db.ParkingDataSource;
 import com.infotech.sfparking.model.AvailableParking;
 import com.infotech.sfparking.parser.ParkingJSONParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,15 +77,38 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
 //        updateDisplay(37.7919, -122.3975);
 	}
+    public void geoLocate(View v) throws IOException {
+        hideSoftKeyboard(v);
+        EditText et = (EditText) findViewById(R.id.locationEdit);
+        String location = et.getText().toString();
+        Geocoder gc = new Geocoder(this);
+        List<Address> addressList = gc.getFromLocationName(location, 1);
+        Address address = addressList.get(0);
+        double lat = address.getLatitude();
+        double lng = address.getLongitude();
+        et.setText("");
+        gotoLocation(lat,lng);
+
+
+
+    }
+
+    private void hideSoftKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
 
     private void gotoCurrentLocation() {
         Location currentlocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         if(currentlocation == null){
             Toast.makeText(this,"current location is not available", Toast.LENGTH_LONG).show();
         }else{
-            mCurrentLatLng = new LatLng(currentlocation.getLatitude(), currentlocation.getLongitude());
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, DEFAULT_ZOOM);
-            mMap.moveCamera(update);
+            double lat = currentlocation.getLatitude();
+            double lng = currentlocation.getLongitude();
+            mCurrentLatLng = new LatLng(lat,lng);
+            gotoLocation(lat,lng);
+
         }
 
     }
@@ -89,6 +117,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         mCurrentLatLng = new LatLng(lat,lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, DEFAULT_ZOOM);
         mMap.moveCamera(update);
+        mMap.addMarker(new MarkerOptions().position(mCurrentLatLng).title(""));
+
     }
 
     protected synchronized void buildGoogleApiClient() {
