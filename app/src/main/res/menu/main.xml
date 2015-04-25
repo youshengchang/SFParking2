@@ -13,7 +13,7 @@
     <item android:id="@+id/action_get_data"
         android:title="@string/get_data"
         android:showAsAction="always"/>
-    <item android:id="@+id/action_set_radius"
-        android:title="@string/set_radius"
+    <item android:id="@+id/action_toggle_sensor"
+        android:title="@string/sensor"
         android:showAsAction="always"/>
 </menu>

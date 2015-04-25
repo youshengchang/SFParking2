@@ -1708,7 +1708,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f090042;
         public static final int action_mode_bar_stub=0x7f090041;
         public static final int action_mode_close_button=0x7f090034;
-        public static final int action_set_radius=0x7f09005a;
+        public static final int action_toggle_sensor=0x7f09005a;
         public static final int activity_chooser_view_content=0x7f090035;
         public static final int adjust_height=0x7f090016;
         public static final int adjust_width=0x7f090017;
@@ -1875,7 +1875,7 @@ containing a value of this type.
         public static final int get_data=0x7f0b0032;
         public static final int google_maps_key=0x7f0b0039;
         public static final int hello_world=0x7f0b0033;
-        public static final int set_radius=0x7f0b0034;
+        public static final int sensor=0x7f0b0034;
         public static final int sf_market=0x7f0b0035;
         public static final int store_picture_message=0x7f0b0036;
         public static final int store_picture_title=0x7f0b0037;

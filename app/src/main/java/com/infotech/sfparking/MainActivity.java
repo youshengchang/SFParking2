@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,13 +40,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
-	//TextView output;
-	//ProgressBar pb;
+public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
+
 	List<MyTask> tasks;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 	
-	//List<Flower> flowerList;
+
     List<AvailableParking> parkingList;
 
     ParkingDataSource datasource;
@@ -54,6 +55,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     LatLng mCurrentLatLng;
     String sfParkingURI = "http://api.sfpark.org/sfpark/rest/availabilityservice?response=json";
     float radius = 0.2f;
+    boolean mLocationSensor = true;
+    LocationRequest request;
+    final int TIME_INTERVAL = 60000;
+    final int FAST_TIME_INTERVAL = 1000;
+
     
 
 
@@ -74,9 +80,18 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(!datasource.findAll().isEmpty()){
             datasource.deleteAll();
         }
+        mLocationSensor = true;
+        initLocationRequest();
 
-//        updateDisplay(37.7919, -122.3975);
 	}
+    private void initLocationRequest(){
+
+        request = LocationRequest.create();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setInterval(TIME_INTERVAL);
+        request.setFastestInterval(FAST_TIME_INTERVAL);
+
+    }
     public void geoLocate(View v) throws IOException {
         hideSoftKeyboard(v);
         EditText et = (EditText) findViewById(R.id.locationEdit);
@@ -172,10 +187,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_get_data) {
 			if (isOnline()) {
-				//requestData("http://services.hanselandpetal.com/feeds/flowers.json");
-//                requestData("http://api.sfpark.org/sfpark/rest/availabilityservice?response=json&lat=37.7919&long=-122.3975&radius=0.05&uom=mile");
+
                 requestData(getSfParkingURI());
-                //updateDisplay(37.7919, -122.3975);
+
 			} else {
 				Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
 			}
@@ -186,15 +200,20 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(item.getItemId() == R.id.action_market){
             gotoLocation(37.7919, -122.3975);
         }
+        if(item.getItemId() == R.id.action_toggle_sensor){
+
+                toggleSensor();
+
+        }
 		return false;
 	}
 
-    private void updateDisplay(double lat, double lng) {
-
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, DEFAULT_ZOOM);
-        mMap.moveCamera(update);
-    }
+//    private void updateDisplay(double lat, double lng) {
+//
+//        LatLng ll = new LatLng(lat, lng);
+//        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, DEFAULT_ZOOM);
+//        mMap.moveCamera(update);
+//    }
 
     private void requestData(String uri) {
 		MyTask task = new MyTask();
@@ -224,10 +243,24 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 		}
 	}
 
+    private void toggleSensor(){
+        if(mLocationSensor){
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request,this);
+            mLocationSensor = false;
+        }else{
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,this);
+            mLocationSensor = true;
+        }
+    }
     @Override
     public void onConnected(Bundle bundle) {
         Toast.makeText(this, "The connection service is available", Toast.LENGTH_SHORT).show();
-        gotoCurrentLocation();
+
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request,this);
+
+
+      //gotoCurrentLocation();
 
     }
 
@@ -241,16 +274,21 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+        mCurrentLatLng = ll;
+        gotoCurrentLocation();
+
+    }
+
 
     private class MyTask extends AsyncTask<String, String, String> {
 
 		@Override
 		protected void onPreExecute() {
-//			updateDisplay("Starting task");
-			
-//			if (tasks.size() == 0) {
-//				pb.setVisibility(View.VISIBLE);
-//			}
+
 			tasks.add(this);
 		}
 		
@@ -270,9 +308,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             updateDatabase();
             updateDisplay();
 			tasks.remove(this);
-//			if (tasks.size() == 0) {
-//				pb.setVisibility(View.INVISIBLE);
-//			}
+
 
 		}
 		
