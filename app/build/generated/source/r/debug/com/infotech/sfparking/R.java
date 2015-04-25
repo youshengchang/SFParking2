@@ -1690,6 +1690,7 @@ containing a value of this type.
         public static final int ic_plusone_tall_off_client=0x7f020051;
         public static final int powered_by_google_dark=0x7f020052;
         public static final int powered_by_google_light=0x7f020053;
+        public static final int splash=0x7f020054;
     }
     public static final class id {
         public static final int action_bar=0x7f090045;
@@ -1700,15 +1701,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090033;
         public static final int action_bar_title=0x7f090032;
         public static final int action_context_bar=0x7f090046;
-        public static final int action_current=0x7f090057;
-        public static final int action_get_data=0x7f090059;
-        public static final int action_market=0x7f090058;
+        public static final int action_current=0x7f090058;
+        public static final int action_get_data=0x7f09005a;
+        public static final int action_market=0x7f090059;
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_bar=0x7f090042;
         public static final int action_mode_bar_stub=0x7f090041;
         public static final int action_mode_close_button=0x7f090034;
-        public static final int action_toggle_sensor=0x7f09005a;
+        public static final int action_toggle_sensor=0x7f09005b;
         public static final int activity_chooser_view_content=0x7f090035;
         public static final int adjust_height=0x7f090016;
         public static final int adjust_width=0x7f090017;
@@ -1773,6 +1774,7 @@ containing a value of this type.
         public static final int showCustom=0x7f09000f;
         public static final int showHome=0x7f090010;
         public static final int showTitle=0x7f090011;
+        public static final int splashscreen=0x7f090057;
         public static final int split_action_bar=0x7f090007;
         public static final int strict_sandbox=0x7f090027;
         public static final int submit_area=0x7f090050;
@@ -1813,7 +1815,8 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030015;
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int activity_main=0x7f030017;
-        public static final int support_simple_spinner_dropdown_item=0x7f030018;
+        public static final int activity_splash=0x7f030018;
+        public static final int support_simple_spinner_dropdown_item=0x7f030019;
     }
     public static final class menu {
         public static final int main=0x7f0d0000;

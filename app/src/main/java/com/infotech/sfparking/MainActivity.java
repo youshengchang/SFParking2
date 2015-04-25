@@ -53,8 +53,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private GoogleApiClient mGoogleApiClient;
     final float DEFAULT_ZOOM = 15;
     LatLng mCurrentLatLng;
-    String sfParkingURI = "http://api.sfpark.org/sfpark/rest/availabilityservice?response=json";
-    float radius = 0.2f;
+    String sfParkingURI = "http://api.sfpark.org/sfpark/rest/availabilityservice?response=json&pricing=yes";
+    float radius = 0.5f;
     boolean mLocationSensor = true;
     LocationRequest request;
     final int TIME_INTERVAL = 60000;
@@ -155,17 +155,17 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-
-
-            }
+//            if (mMap != null) {
+//                setUpMap();
+//
+//
+//            }
         }
     }
 
-    private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-    }
+//    private void setUpMap() {
+////        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+//    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -208,12 +208,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 		return false;
 	}
 
-//    private void updateDisplay(double lat, double lng) {
-//
-//        LatLng ll = new LatLng(lat, lng);
-//        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, DEFAULT_ZOOM);
-//        mMap.moveCamera(update);
-//    }
+
 
     private void requestData(String uri) {
 		MyTask task = new MyTask();
@@ -259,8 +254,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request,this);
 
-
-      //gotoCurrentLocation();
 
     }
 
