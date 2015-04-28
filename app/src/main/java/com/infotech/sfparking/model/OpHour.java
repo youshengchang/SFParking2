@@ -4,12 +4,20 @@ package com.infotech.sfparking.model;
  * Created by youshengchang on 4/24/15.
  */
 public class OpHour {
+    private long opHourId;
     private String fromDay;
     private String toDay;
     private String beginTime;
     private String endTime;
 
 
+    public long getOpHourId() {
+        return opHourId;
+    }
+
+    public void setOpHourId(long opHourId) {
+        this.opHourId = opHourId;
+    }
 
     public String getFromDay() {
         return fromDay;

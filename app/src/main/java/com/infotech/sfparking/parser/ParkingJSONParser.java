@@ -120,15 +120,16 @@ public class ParkingJSONParser {
 
 
 
-        //Only interested in the off street parking info
-        if(type.equalsIgnoreCase("ON"))
-            return null;
-        if(type.equalsIgnoreCase("OFF")){
+
+        //if(type.equalsIgnoreCase("ON"))
+        //    return null;
+        //if(type.equalsIgnoreCase("OFF")){
 
             name = (name != null)?(name):("");
             desc = (desc != null)?(desc):("");
             inter = (inter != null)?(inter):("");
             tel = (tel != null)?(tel):("");
+
             String[] temp = location.split(",");
             parking.setType(type);
             parking.setName(name);
@@ -141,7 +142,12 @@ public class ParkingJSONParser {
             parking.setPts(pts);
             parking.setLongitude(Double.parseDouble(temp[0]));
             parking.setLatitude(Double.parseDouble(temp[1]));
+            if(type.equalsIgnoreCase("ON")) {
+                parking.setLongitude(Double.parseDouble(temp[2]));
+                parking.setLatitude(Double.parseDouble(temp[3]));
 
+
+            }
             if(ops != null){
                 for(int i = 0; i < ops.length(); i++){
                     JSONObject opHour = ops.getJSONObject(i);
@@ -177,7 +183,7 @@ public class ParkingJSONParser {
             parking.setRates(rateList);
             parking.setOpHours(opHourList);
 
-        }
+        //}
         return parking;
 
 

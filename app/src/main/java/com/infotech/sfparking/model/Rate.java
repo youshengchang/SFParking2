@@ -4,6 +4,7 @@ package com.infotech.sfparking.model;
  * Created by youshengchang on 4/24/15.
  */
 public class Rate {
+    private long rateId;
     private String beginHour;
     private String endHour;
     private double rate;
@@ -12,6 +13,13 @@ public class Rate {
     private String rateRestriction;
 
 
+    public long getRateId() {
+        return rateId;
+    }
+
+    public void setRateId(long rateId) {
+        this.rateId = rateId;
+    }
 
     public String getBeginHour() {
         return beginHour;

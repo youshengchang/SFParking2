@@ -27,6 +27,25 @@ public class AvailableParking {
     private int pts;
     private double latitude;
     private double longitude;
+    private double latitude2;
+
+    public double getLatitude2() {
+        return latitude2;
+    }
+
+    public void setLatitude2(double latitude2) {
+        this.latitude2 = latitude2;
+    }
+
+    public double getLongitude2() {
+        return longitude2;
+    }
+
+    public void setLongitude2(double longitude2) {
+        this.longitude2 = longitude2;
+    }
+
+    private double longitude2;
     private List<OpHour> opHours;
     private List<Rate> rates;
 
