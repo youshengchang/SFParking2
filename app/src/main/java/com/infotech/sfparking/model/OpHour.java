@@ -51,10 +51,12 @@ public class OpHour {
         this.endTime = endTime;
     }
 
+
     @Override
     public String toString() {
         return "OpHour{" +
-                "fromDay='" + fromDay + '\'' +
+                "opHourId=" + opHourId +
+                ", fromDay='" + fromDay + '\'' +
                 ", toDay='" + toDay + '\'' +
                 ", beginTime='" + beginTime + '\'' +
                 ", endTime='" + endTime + '\'' +

@@ -323,6 +323,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             while(it.hasNext()){
                 parking = (AvailableParking)it.next();
                 datasource.create(parking);
+                Log.i("SFPARK", "Parking Info: " + parking);
             }
         }
     }

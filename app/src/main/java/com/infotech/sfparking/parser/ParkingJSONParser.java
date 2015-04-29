@@ -60,8 +60,7 @@ public class ParkingJSONParser {
 //                Log.i("SFPARK", "test: " + test);
  //               parking.setType(obj.optString("TYPE"));
                 if(parking != null){
-                    Log.i("SFPARK", String.valueOf(parking));
-
+//                    Log.i("SFPARK", String.valueOf(parking));
                     parkingList.add(parking);
                 }
 

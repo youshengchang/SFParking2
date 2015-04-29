@@ -172,6 +172,8 @@ public class AvailableParking {
 
 
 
+
+
     @Override
     public String toString() {
         return "AvailableParking{" +
@@ -188,6 +190,8 @@ public class AvailableParking {
                 ", pts=" + pts +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", latitude2=" + latitude2 +
+                ", longitude2=" + longitude2 +
                 ", opHours=" + opHours +
                 ", rates=" + rates +
                 '}';

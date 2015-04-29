@@ -69,10 +69,12 @@ public class Rate {
         this.rateRestriction = rateRestriction;
     }
 
+
     @Override
     public String toString() {
         return "Rate{" +
-                "beginHour='" + beginHour + '\'' +
+                "rateId=" + rateId +
+                ", beginHour='" + beginHour + '\'' +
                 ", endHour='" + endHour + '\'' +
                 ", rate=" + rate +
                 ", desc='" + desc + '\'' +

@@ -85,10 +85,12 @@ public class ParkingDataSource {
         List<Rate> parkingRates = parking.getRates();
         ContentValues values;
         long insertId;
+        int i;
+
 
         for(Rate rate: parkingRates){
             values = new ContentValues();
-
+            i = parkingRates.indexOf(rate);
             values.put(ParkingTableConstants.COLUMN_PARKING_ID, parking.getParkingId());
             values.put(ParkingTableConstants.COLUMN_BEG, rate.getBeginHour());
             values.put(ParkingTableConstants.COLUMN_END, rate.getEndHour());
@@ -98,6 +100,8 @@ public class ParkingDataSource {
             values.put(ParkingTableConstants.COLUMN_RR, rate.getRateRestriction());
             insertId = database.insert(ParkingTableConstants.TABLE_RATES, null, values);
             rate.setRateId(insertId);
+            parkingRates.set(i, rate);
+
 
 
         }
@@ -107,7 +111,30 @@ public class ParkingDataSource {
     }
 
     private AvailableParking insertOpHours(AvailableParking parking) {
-            return null;
+
+        List<OpHour> operatingHours = parking.getOpHours();
+        ContentValues values;
+        long opHourId;
+        int i;
+
+        for(OpHour opHour: operatingHours){
+            i = operatingHours.indexOf(opHour);
+            values = new ContentValues();
+
+            values.put(ParkingTableConstants.COLUMN_PARKING_ID, parking.getParkingId());
+            values.put(ParkingTableConstants.COLUMN_FROM, opHour.getFromDay());
+            values.put(ParkingTableConstants.COLUMN_TO, opHour.getToDay());
+            values.put(ParkingTableConstants.COLUMN_BEG, opHour.getBeginTime());
+            values.put(ParkingTableConstants.COLUMN_END, opHour.getEndTime());
+            opHourId = database.insert(ParkingTableConstants.TABLE_OPHOURS, null, values);
+            opHour.setOpHourId(opHourId);
+            operatingHours.set(i, opHour);
+        }
+
+        parking.setOpHours(operatingHours);
+        return parking;
+
+
     }
 
     public List<AvailableParking> findAll(){
